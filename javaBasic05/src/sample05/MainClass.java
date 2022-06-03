@@ -77,7 +77,7 @@ public class MainClass {
 		
 		int[] numArrPos = numberArrayPosition;
 		
-		// 2차원 배열 
+		// 2차원 배열 선언 방식, 4개 다 가능, 포인터와 거의 동일!
 		//int[][] arr2 = new int[3][4];
 		//int arr2[][] = new int[3][4];
 		//int []arr2[] = new int[3][4];
