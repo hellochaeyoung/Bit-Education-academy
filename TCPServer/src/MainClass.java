@@ -7,6 +7,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
+import threadex.Client;
 import threadex.ServerThread;
 
 public class MainClass {
@@ -64,6 +65,8 @@ public class MainClass {
 		 */
 
 		Socket clientSocket = null;
+		
+		Client client = null;
 
 		try {
 
@@ -71,14 +74,14 @@ public class MainClass {
 			ServerSocket serverSocket = new ServerSocket(9000);
 			// 버전 확인, binding, listen
 			
-			List<Socket> list = new ArrayList<>();
+			List<Client> list = new ArrayList<>();
 
 			while(true) {
 			
 				System.out.println("접속 대기중...");
 				clientSocket = serverSocket.accept();
 				
-				list.add(clientSocket); // clientSocket 정보를 저장해야함, -> 다른 클라이언트 접속 시 저장해두지 않으면 정보가 없어지기 때문!
+				list.add(new Client(clientSocket)); // clientSocket 정보를 저장해야함, -> 다른 클라이언트 접속 시 저장해두지 않으면 정보가 없어지기 때문!
 	
 				// 접속 client 확인
 				System.out.println("client IP : " + clientSocket.getInetAddress() + ", Port : " + clientSocket.getPort());
