@@ -5,7 +5,9 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import threadex.Client;
 import threadex.ServerThread;
@@ -75,6 +77,7 @@ public class MainClass {
 			// 버전 확인, binding, listen
 			
 			List<Client> list = new ArrayList<>();
+			Set<String> roomNameSet = new HashSet<>();
 
 			while(true) {
 			
@@ -85,26 +88,10 @@ public class MainClass {
 	
 				// 접속 client 확인
 				System.out.println("client IP : " + clientSocket.getInetAddress() + ", Port : " + clientSocket.getPort());
-			
 				
-				/* 스레드가 담당해야 하는 부분
-				// 수신(receive) 
-				BufferedReader reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream())); 
-				String str = reader.readLine();
-				System.out.println("client로부터 받은 메시지 : " + str);
-				
-				
-				// 송신(send) 
-				PrintWriter writer = new PrintWriter(clientSocket.getOutputStream()); 
-				writer.println(str);
-				writer.flush();
-				*/
-				
-				new ServerThread(clientSocket, list).start();
+				new ServerThread(clientSocket, list, roomNameSet).start();
 				
 			}
-			// clientSocket.close();
-			// serverSocket.close();
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
