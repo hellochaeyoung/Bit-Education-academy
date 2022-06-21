@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import impl.HandlerServerExceptionConsumer;
 import interfaces.HandlerExceptionConsumer;
@@ -94,6 +95,7 @@ public class ServerThread extends Thread {
 					// 방 제목 중복 처리
 					if(!roomNameSet.add(infos[1])) {
 						System.out.println("[roomNameSet]:" + roomNameSet.toString());
+
 						String msg = "Duplicated Room Name:" + "[" + infos[1] + "]";
 						consumer.accept(socket, msg);
 						continue;
@@ -132,9 +134,10 @@ public class ServerThread extends Thread {
 					String[] info = str.split("/");
 					
 					String roomName = info[1];
-					String id = info[2];
-					String msg = info[3];
-					
+					// String id = info[2];
+					// String msg = info[3];
+
+					/* 1. for문 사용
 					for(Client c : list) {
 						Socket s = c.getSocket();
 						List<String> list = c.getRoomList();
@@ -144,7 +147,13 @@ public class ServerThread extends Thread {
 							writer.println(str);
 							writer.flush();
 						}
-					}
+					}*/
+
+					// 2. 람다 및 스트림 사용
+					list.stream()
+							.filter(c -> socket != c.getSocket() && c.getRoomList().contains(roomName))
+							.forEach(client -> consumer.accept(client.getSocket(), str));
+					
 				}
 				// 채팅방 나가기 처리
 				else if(str.startsWith("roomExit")) {
@@ -157,7 +166,7 @@ public class ServerThread extends Thread {
 					if(info.length > 3) {
 						roomNameSet.remove(roomName);
 					}
-					
+					/* 1. for문
 					for(Client c : list) {
 						Socket s = c.getSocket();
 						List<String> list = c.getRoomList();
@@ -173,23 +182,38 @@ public class ServerThread extends Thread {
 							writer.println(str);
 							writer.flush();
 						}
-					}
+					}*/
+
+					// 2. 람다, 스트림 사용
+
+					// 본인 채팅방 목록에서 삭제
+					list.stream().filter(client -> socket == client.getSocket()).findAny().ifPresent(client -> client.getRoomList().remove(roomName));
+
+					// 해당 채팅방에 속해있었던 유저들에게 exit 메시지 전송
+					list.stream().filter(client -> client.getRoomList().contains(roomName)).forEach(c -> consumer.accept(c.getSocket(), str));
+
 				}
 				// 로비에서 나가기 처리
 				else if(str.startsWith("mainExit")) {
 					
 					// System.out.println("mainExit>>>>" + str.split("/")[1]);
+					/*
 					for(Client c : list) {
 						Socket s = c.getSocket();
-						
+
 						if(s != socket) {
-							PrintWriter writer = new PrintWriter(s.getOutputStream()); 
+							PrintWriter writer = new PrintWriter(s.getOutputStream());
 							writer.println(str);
 							writer.flush();
 						}
 					}
+					*/
+
+					list.stream().filter(c-> c.getSocket() != socket).forEach(client -> consumer.accept(client.getSocket(), str));
+
 				}
 				else {
+					/*
 					for(Client c : list) {
 						Socket s = c.getSocket();
 						if(socket != s) { // 자기 자신은 제외
@@ -198,6 +222,9 @@ public class ServerThread extends Thread {
 							writer.flush();
 						}
 					}
+					*/
+
+					list.stream().filter(c -> c.getSocket() != socket).forEach(client -> consumer.accept(client.getSocket(), str));
 					
 				}
 				
@@ -209,18 +236,27 @@ public class ServerThread extends Thread {
 			// TODO Auto-generated catch block
 			// e.printStackTrace();
 			System.out.println("클라이언트 ip = " + socket.getInetAddress() + " is out.");
+
+			/*
 			for(Client c : list) {
 				if(c.getSocket() == socket) {
 					list.remove(c);
 					break;
 				}
 			}
+			*/
+
+			list.stream().filter(client -> socket == client.getSocket()).findAny().ifPresent(c -> list.remove(c));
 			
-			// 접속 상태인 클라이언트 출력
+			/*
 			for(Client c : list) {
 				Socket s = c.getSocket();
 				System.out.println("접속 되어 있는 IP : " + s.getInetAddress() + ", port 번호 : " + s.getPort());
 			}
+			*/
+
+			// 접속 상태인 클라이언트 출력
+			list.forEach(c -> System.out.println("접속 되어 있는 IP : " + c.getSocket().getInetAddress() + ", port 번호 : " + c.getSocket().getPort()));
 			
 			try {
 				socket.close();
@@ -231,23 +267,5 @@ public class ServerThread extends Thread {
 		} 
 		
 	}
-	
-	/*
-	private void sendMessage(Socket s, String msg){
-		
-		// Socket s = c.getSocket();
-		PrintWriter writer;
-		try {
-			writer = new PrintWriter(s.getOutputStream());
-			System.out.println(">>>>>" + msg);
-			writer.println(msg);
-			writer.flush();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} 
-		
-	}
-	*/
 	
 }
