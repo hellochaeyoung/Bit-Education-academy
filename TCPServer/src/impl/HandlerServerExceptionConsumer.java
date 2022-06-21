@@ -11,6 +11,7 @@ public class HandlerServerExceptionConsumer implements BiConsumer<Socket, String
 	public void accept(Socket t, String u) {
 		
 		try {
+
 			PrintWriter writer = new PrintWriter(t.getOutputStream());
 			writer.println(u);
 			writer.flush();
