@@ -8,15 +8,18 @@ import java.util.function.Consumer;
 public interface HandlerExceptionConsumer<T, U> {
 
 	void accept(T t, U u) throws Exception;
-	
-	
+
 	static <T, U> BiConsumer<T, U> handlingBiConsumerWrapper(HandlerExceptionConsumer<T, U> consumer) {
 		
 		return (i, j) -> {
 			try {
+
 				consumer.accept(i,j);
+
 			}catch ( Exception e) {
+
 				throw new RuntimeException(e);
+
 			}
 		};
 	}
