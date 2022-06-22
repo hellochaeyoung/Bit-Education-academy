@@ -9,13 +9,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
+import javax.swing.*;
 
 import net.WriteClass;
 
@@ -102,11 +96,16 @@ public class ClientFrame extends JFrame implements WindowListener, ActionListene
 			// 채팅하고자 선택한 유저들 확인
 			
 			StringBuilder sb = new StringBuilder("enter/" + roomNameTextField.getText() + "/");
+
+			/*
 			for(JCheckBox box : checkList) {
 				if(box.isSelected()) {
 					sb.append(box.getText()).append("/");
 				}
 			}
+			*/
+
+			checkList.stream().filter(JCheckBox::isSelected).forEach(b -> sb.append(b.getText()).append("/"));
 			
 			// server 전송
 			wc.sendEnterChattingRoomMessage(sb.toString());
@@ -114,9 +113,12 @@ public class ClientFrame extends JFrame implements WindowListener, ActionListene
 			roomNameTextField.setText("");
 			
 			// 체크 해제
+			/*
 			for(JCheckBox box : checkList) {
 				box.setSelected(false);
 			}
+			*/
+			checkList.forEach(box -> box.setSelected(false));
 			
 		}
 		else if(obj == btnExit) {
