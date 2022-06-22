@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -60,10 +61,12 @@ public class ChattingRoomFrame extends JFrame implements ActionListener{
 	
 	public void insertUsers(String names) {
 		String[] users = names.split(",");
-		
+		/*
 		for(String n : users) {
 			userList.add(n);
-		}
+		}*/
+
+		userList.addAll(Arrays.asList(users));
 		
 	}
 
