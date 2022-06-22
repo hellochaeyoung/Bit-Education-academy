@@ -78,7 +78,7 @@ public class ReadThread extends Thread {
 					
 					StringBuilder sb = new StringBuilder();
 					for(int i=2;i<infos.length;i++) {
-						sb.append(infos[i] + ",");
+						sb.append(infos[i]).append(",");
 					}
 					
 					String totalName = sb.toString();
@@ -100,12 +100,15 @@ public class ReadThread extends Thread {
 					String msg = infos[3];
 					
 					System.out.println(">>>ReadThread, roomMsg, id, msg " + id + "," + msg);
-					
+
+					/*
 					for(ChattingRoomFrame rf : roomFrameList) {
 						if(rf.name.equals(room)) {
 							rf.msgTextArea.append("[" + id + "]" + msg + "\n");
 						}
 					}
+					*/
+					roomFrameList.stream().filter(rf -> rf.name.equals(room)).forEach(rf -> rf.msgTextArea.append("[" + id + "]" + msg + "\n"));
 					
 				}
 				else if(str.startsWith("roomExit")) {
@@ -114,14 +117,19 @@ public class ReadThread extends Thread {
 					
 					String room = infos[1];
 					String id = infos[2];
-					
+					/*
 					for(ChattingRoomFrame rf : roomFrameList) {
 						if(rf.name.equals(room)) {
 							rf.msgTextArea.append("[" + id + "]" + " is exit." + "\n");
 							roomFrameList.remove(rf);
 							break;
 						}
-					}
+					}*/
+
+					roomFrameList.stream().filter(rf -> rf.name.equals(room)).findAny().ifPresent(rf -> {
+						rf.msgTextArea.append("[" + id + "]" + " is exit." + "\n");
+						roomFrameList.remove(rf);
+					});
 					
 				}
 				else if(str.startsWith("mainExit")) {
@@ -129,7 +137,8 @@ public class ReadThread extends Thread {
 					String id = str.split("/")[1];
 					
 					cf.textA.append("[" + id + "]" + " is exit." + "\n");
-					
+
+					/*
 					for(JCheckBox box : cf.checkList) {
 						if(box.getText().equals(id)) {
 							userSet.remove(box.getText());
@@ -139,6 +148,14 @@ public class ReadThread extends Thread {
 							break;
 						}
 					}
+					*/
+
+					cf.checkList.stream().filter(box -> box.getText().equals(id)).findAny().ifPresent(box -> {
+						userSet.remove(box.getText());
+						cf.checkList.remove(box);
+						cf.listPanel.remove(box);
+					});
+
 				}
 				else {
 					cf.textA.append(str + "\n");
