@@ -9,6 +9,8 @@
       <list>
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/../JSPProject/pom.xml" />
+        <option value="$PROJECT_DIR$/DBTest/pom.xml" />
+        <option value="$PROJECT_DIR$/JSPModel1Ex/pom.xml" />
       </list>
     </option>
   </component>
