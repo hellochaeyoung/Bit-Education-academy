@@ -62,6 +62,7 @@
 
     <br><br>
 
+    <button type="button" onclick="commentBtn()">댓글달기</button>
     <button type="button" onclick="updateBtn()">수정</button>
     <button type="button" onclick="deleteBtn()">삭제</button>
     <button type="button" onclick="backBtn()">글 목록</button>
@@ -80,6 +81,10 @@
 
     function backBtn() {
         location.href = "bbslist.jsp";
+    }
+
+    function commentBtn() {
+        location.href = "answer.jsp?seq=" + <%= seq%>;
     }
 
 </script>
