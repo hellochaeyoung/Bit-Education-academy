@@ -10,6 +10,23 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
+<%!
+    // 댓글용 함수
+    // depth와 image를 추가하는 함수
+    // >> 댓글....
+    public String arrow(int depth) {
+        String img = "<img src='./image/arrow.png' width='20px' height='20px'/>";
+        String nbsp = "&nbsp;&nbsp;&nbsp;&nbsp;";
+
+        String ts = "";
+        for(int i=0;i<depth;i++) {
+            ts += nbsp; // 깊이에 따라 여백을 조정
+        }
+
+        return depth==0 ? "" : ts + img;
+    }
+%>
+
 <%
     // jsp는 이 과정이 매 페이지 마다 있어야함, 스프링에서는 web.xml에 다 설정해줄 수 있음
     Object obj = session.getAttribute("login");
@@ -90,6 +107,7 @@
             <tr>
                 <th><%= i + 1%></th>
                 <td>
+                    <%= arrow(bbs.getDepth())%>
                     <a href="bbsdetail.jsp?seq=<%= bbs.getSeq() %>"><%=bbs.getTitle() %></a>
                 </td>
                 <td><%= bbs.getReadCount() %></td>
