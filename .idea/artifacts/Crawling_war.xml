@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="Crawling:war">
+    <output-path>$PROJECT_DIR$/Crawling/target</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <module>Crawling</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
+    <root id="archive" name="Crawling-1.0-SNAPSHOT.war">
+      <element id="artifact" artifact-name="Crawling:war exploded" />
+    </root>
+  </artifact>
+</component>
